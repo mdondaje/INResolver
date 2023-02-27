@@ -19,7 +19,7 @@ referential_body_weight_women = 60
 patients_data_directory = 'patients_data'
 results_directory = 'results'
 delimiter = ','
-number_of_fields_in_patients_data = 7
+number_of_fields_in_patients_data = 8
 
 
 def solve(file):
@@ -34,6 +34,7 @@ def solve(file):
     other_medicines_taken_column = patient_data_array[:, 4]
     age_column = patient_data_array[:, 5].astype('float64')
     sex_column = patient_data_array[:, 6]
+    prescribed_medicine_dose_column = patient_data_array[:, 7].astype('float64')
 
     # RESULT'S COLUMNS
     results = np.zeros([number_of_rows], dtype='float64')
@@ -47,6 +48,7 @@ def solve(file):
         other_medicines_taken = other_medicines_taken_column[row]
         age = age_column[row]
         sex = sex_column[row]
+        prescribed_medicine_dose = prescribed_medicine_dose_column[row]
 
         if sex == 'M':
             referential_body_weight = referential_body_weight_men
@@ -75,11 +77,13 @@ def solve(file):
     axs[0].legend()
     axs[0].margins(0.08)
 
-    axs[1].plot(x_axis, results, label='Quantity of medicine', marker='.')
-    axs[1].set_ylabel('Quantity of medicine [mg]')
+    axs[1].plot(x_axis, results, label='Calculated', marker='.')
+    axs[1].plot(x_axis,prescribed_medicine_dose_column, label='Prescribed', marker='.')
+    axs[1].set_ylabel('Medicine dose [mg]')
     axs[1].grid(True)
     for index in range(len(x_axis)):
         axs[1].text(x_axis[index], results[index], f'{results[index]:.2f}')
+        axs[1].text(x_axis[index], prescribed_medicine_dose_column[index], f'{prescribed_medicine_dose_column[index]:.2f}')
     axs[1].legend()
     axs[1].margins(0.08)
     fig.tight_layout()

@@ -14,7 +14,8 @@ weight in kilograms (for example 61.2),\
 diet circumstances (by putting a proper letter from a dictionary below, if not applicable leave it blank),\
 other medicines taken (by putting a proper letter from a dictionary below, if not applicable leave it blank),\
 age in years (for example 42.7),\
-sex (M/F),
+sex (M/F),\
+prescribed dose of medicine in mg (for example 4.5, non mandatory)
 
 #### Diet circumstances dictionary 
 _Uppercase or lowercase letters cannot repeat in one dictionary_
