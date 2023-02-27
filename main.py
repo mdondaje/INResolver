@@ -66,7 +66,7 @@ def solve(file):
     fig, axs = plt.subplots(2, 1)
     fig = pylab.gcf()
     fig.canvas.manager.set_window_title(f'{filename}')
-    axs[0].plot(x_axis, inr_test_results_column, label='INR test result', marker='.')
+    axs[0].plot(x_axis, inr_test_results_column, color='red', label='INR test result', marker='.')
     axs[0].set_title(f'{filename}')
     axs[0].set_ylabel('INR test result')
     axs[0].grid(True)
