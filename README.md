@@ -3,7 +3,9 @@
 **_Algorithm for setting proper quantity of anti-clotting medicine_**
 
 Script takes patient's data (INR test result, weight, diet circumstances, other medicines taken, age, sex)
-in CSV format and tries to return the proper quantity of acenocoumarol or warfarin medicine
+in CSV format and tries to return the proper quantity of acenocoumarol or warfarin medicine.
+
+![plot example](results/example_patient.csv.png "Plot example")
 
 ### Structure of CSV (comma-separated values) file with patient's data:
 date (yyyy-mm-dd),\
