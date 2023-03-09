@@ -30,7 +30,7 @@ def solve(file):
     other_medicines_taken_column = patient_data_array[:, 2]
     diet_circumstances_column = patient_data_array[:, 3]
     alt_test_result_column = patient_data_array[:, 4]
-    asp_test_result_column = patient_data_array[:, 5]
+    ast_test_result_column = patient_data_array[:, 5]
     ggtp_test_result_column = patient_data_array[:, 6]
     prescribed_medicine_dose_column = patient_data_array[:, 7].astype('float64')
 
@@ -50,7 +50,7 @@ def solve(file):
         other_medicines_taken = other_medicines_taken_column[row]
         diet_circumstances = diet_circumstances_column[row]
         alt_test_result = alt_test_result_column[row]
-        asp_test_result = alt_test_result_column[row]
+        ast_test_result = alt_test_result_column[row]
         ggtp_test_result = ggtp_test_result_column[row]
         prescribed_medicine_dose = prescribed_medicine_dose_column[row]
         medicine_type = medicine_type_column[row]

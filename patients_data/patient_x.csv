@@ -1,4 +1,4 @@
-﻿data badania;wynik INR;leki;dieta;wynik ALT;wynik ASP;wynik GGTP;dawka przepisana;lek;data urodzenia;płeć
+﻿data badania;wynik INR;leki;dieta;wynik ALT;wynik AST;wynik GGTP;dawka przepisana;lek;data urodzenia;płeć
 26.02.2023;3;;;;;;2;A;05.07.1976;M
 26.03.2023;2.5;;;;;;3;A;;
 29.09.2023;2.2;;;;;;4;A;;
