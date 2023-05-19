@@ -1,0 +1,7 @@
+data badania;wynik INR;leki;dieta;wynik ALT;wynik AST;wynik GGTP;dawka przepisana;lek;data urodzenia;plec
+09.03.2023;1.25;PCHSTNIFKWMLX;;21;43;;2;A;09.03.1959;M
+10.03.2023;1.32;PHSTNIFKWMLX;;;;;3;A;64;M
+11.03.2023;1.63;PHSTNIFKWMLX;;;;;4;A;64;M
+12.03.2023;2.24;PHTNIFKWMLX;;;;;3;A;64;M
+13.03.2023;2.07;PTIFKWLX;;;;;3;A;64;M
+14.03.2023;2.12;;;;;;3;A;;

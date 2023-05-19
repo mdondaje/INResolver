@@ -10,6 +10,7 @@ import os
 target_inr_min = 2.0
 target_inr_mid = 2.5
 target_inr_max = 3.0
+very_high_inr = 4.5
 
 # DATASET
 patients_data_directory = 'patients_data'
@@ -17,8 +18,9 @@ results_directory = 'results'
 delimiter = ';'
 
 
-def solve(file):
-    patient_data_array = np.loadtxt(file, delimiter=delimiter, dtype=str)
+def solve(data_file):
+    print(f'{filename}')
+    patient_data_array = np.loadtxt(data_file, delimiter=delimiter, dtype=str)
     # Delete row zero with columns' names
     patient_data_array = np.delete(patient_data_array, 0, axis=0)
     number_of_rows = len(patient_data_array)
@@ -28,10 +30,10 @@ def solve(file):
     dates_column = [datetime.strptime(date, "%d.%m.%Y").date() for date in dates_column]
     inr_test_results_column = patient_data_array[:, 1].astype('float64')
     other_medicines_taken_column = patient_data_array[:, 2]
-    diet_circumstances_column = patient_data_array[:, 3]
-    alt_test_result_column = patient_data_array[:, 4]
-    ast_test_result_column = patient_data_array[:, 5]
-    ggtp_test_result_column = patient_data_array[:, 6]
+    # diet_circumstances_column = patient_data_array[:, 3]
+    # alt_test_result_column = patient_data_array[:, 4]
+    # ast_test_result_column = patient_data_array[:, 5]
+    # ggtp_test_result_column = patient_data_array[:, 6]
     prescribed_medicine_dose_column = patient_data_array[:, 7].astype('float64')
 
     medicine_type_column = patient_data_array[:, 8]
@@ -48,25 +50,49 @@ def solve(file):
         date = dates_column[row]
         inr_test_result = inr_test_results_column[row]
         other_medicines_taken = other_medicines_taken_column[row]
-        diet_circumstances = diet_circumstances_column[row]
-        alt_test_result = alt_test_result_column[row]
-        ast_test_result = alt_test_result_column[row]
-        ggtp_test_result = ggtp_test_result_column[row]
+        # diet_circumstances = diet_circumstances_column[row]
+        # alt_test_result = alt_test_result_column[row]
+        # ast_test_result = alt_test_result_column[row]
+        # ggtp_test_result = ggtp_test_result_column[row]
         prescribed_medicine_dose = prescribed_medicine_dose_column[row]
         medicine_type = medicine_type_column[row]
         age = date - birthdate
 
         # PROPER ALGORITHM
-        # !!! for example !!!
-        results[row] = 3 + 2 * (target_inr_mid - inr_test_result)
+        # results[row] = 3 + 2 * (target_inr_mid - inr_test_result)
+        if medicine_type == 'A':
+            if row == 0:
+                results[row] = prescribed_medicine_dose
+                print(f'{date}: brak wcześniejszego wyniku - set {prescribed_medicine_dose}')
+            else:
+                previous_prescribed_medicine_dose=prescribed_medicine_dose_column[row-1]
+                if inr_test_result >= very_high_inr:
+                    results[row] = 0
+                    print(f'{date}: INR {inr_test_result} bardzo za wysokie - set 0')
+                elif inr_test_result >= target_inr_max:
+                    results[row] = previous_prescribed_medicine_dose * 0.7
+                    print(f'{date}: INR {inr_test_result} za wysokie - set {results[row]}')
+                elif inr_test_result >= target_inr_min:
+                    results[row] = previous_prescribed_medicine_dose
+                    print(f'{date}: INR {inr_test_result} w normie - set {results[row]}')
+                else:  # INR test result below target_inr_min
+                    if previous_prescribed_medicine_dose == 0:
+                        results[row] = 1 * 1.3
+                        print(f'a {date}: INR {inr_test_result} za niskie - set {results[row]}')
+                    else:
+                        results[row] = previous_prescribed_medicine_dose * 1.3
+                        print(f'{date}: INR {inr_test_result} za niskie - set {results[row]}')
+        else:
+            print('ERROR!!!')
 
         # ROUNDING off floating digits to the nearest 0.5
-        results[row] = round((results[row] * 2) / 2)
+        # results[row] = round((results[row] * 2) / 2)
+        results[row] = round(results[row])
 
         # END OF PROPER ALGORITHM
 
     results_array = np.column_stack((dates_column, results))
-    print(results_array)
+    #print(results_array)
 
     # PLOTS
     fig, axs = plt.subplots(2, 1)
@@ -87,7 +113,11 @@ def solve(file):
     axs[1].grid(True)
     for index in range(len(dates_column)):
         axs[1].text(dates_column[index], results[index], f'{results[index]:.1f}')
-        axs[1].text(dates_column[index], prescribed_medicine_dose_column[index], f'{prescribed_medicine_dose_column[index]:.1f}')
+        try:
+            axs[1].text(dates_column[index], prescribed_medicine_dose_column[index],
+                        f'{prescribed_medicine_dose_column[index]:.1f}')
+        except ValueError:
+            pass
     axs[1].legend()
     axs[1].margins(0.08)
     fig.tight_layout()
