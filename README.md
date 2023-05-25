@@ -1,12 +1,12 @@
 ## INResolver
 
-**_Algorithm for setting proper quantity of anti-clotting medicine_**
+**_Algorithm for setting proper quantity of VKA_**
 
 Script takes patient's data (INR test result, other medicines taken, ALT, AST, GGTP test results,
 prescribed dose, type of medicine, birthdate, sex)
 in CSV format and tries to return the proper quantity of acenocoumarol or warfarin medicine.
 
-![plot example](results/patient_x.csv.png "Plot example")
+![plot example](results/Pacjent-1.csv.png "Plot example")
 
 ### Structure of CSV (comma-separated values) file with patient's data:
 date (dd.mm.yyyy);\

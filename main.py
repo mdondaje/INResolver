@@ -1,6 +1,7 @@
 # IMPORTS
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from matplotlib import pylab
 from datetime import datetime
 import os
@@ -66,22 +67,27 @@ def solve(data_file):
                 print(f'{date}: brak wcześniejszego wyniku - set {prescribed_medicine_dose}')
             else:
                 previous_prescribed_medicine_dose=prescribed_medicine_dose_column[row-1]
-                if inr_test_result >= very_high_inr:
+                if inr_test_result >= very_high_inr: # większe niż 4.5
                     results[row] = 0
-                    print(f'{date}: INR {inr_test_result} bardzo za wysokie - set 0')
-                elif inr_test_result >= target_inr_max:
-                    results[row] = previous_prescribed_medicine_dose * 0.7
-                    print(f'{date}: INR {inr_test_result} za wysokie - set {results[row]}')
-                elif inr_test_result >= target_inr_min:
+                    print(f'{date}: INR {inr_test_result} bardzo za wysokie - set 0 mg')
+                    # TODO male odchylenie przy wcześniejszych wynikach w normie
+                    # TODO dodatkowy wspolczynnik dla danego pacjenta
+                elif inr_test_result >= target_inr_max:  # większe niż 3.0
+                    # wspolczynnik = odchylenie / zakres
+                    factor = (inr_test_result - target_inr_mid) / (very_high_inr - target_inr_max)
+                    results[row] = previous_prescribed_medicine_dose * (1 - 0.5*factor)
+                    print(f'{date}: INR {inr_test_result} za wysokie - zmniejsz do {results[row]} mg')
+                elif inr_test_result >= target_inr_min:  # 2.0-3.0
                     results[row] = previous_prescribed_medicine_dose
-                    print(f'{date}: INR {inr_test_result} w normie - set {results[row]}')
+                    print(f'{date}: INR {inr_test_result} w normie - zostaw {results[row]} mg')
                 else:  # INR test result below target_inr_min
+                    factor = (target_inr_mid - inr_test_result) / target_inr_min
                     if previous_prescribed_medicine_dose == 0:
-                        results[row] = 1 * 1.3
-                        print(f'a {date}: INR {inr_test_result} za niskie - set {results[row]}')
+                        results[row] = 2 * factor
+                        print(f'a {date}: INR {inr_test_result} za niskie - zwiększ do {results[row]} mg')
                     else:
-                        results[row] = previous_prescribed_medicine_dose * 1.3
-                        print(f'{date}: INR {inr_test_result} za niskie - set {results[row]}')
+                        results[row] = previous_prescribed_medicine_dose * (1 + 0.5*factor)
+                        print(f'{date}: INR {inr_test_result} za niskie - zwiększ do {results[row]} mg')
         else:
             print('ERROR!!!')
 
@@ -101,6 +107,8 @@ def solve(data_file):
     axs[0].plot(dates_column, inr_test_results_column, color='C3', label='INR test result', marker='.')
     axs[0].set_title(f'{filename}')
     axs[0].set_ylabel('INR test result')
+    axs[0].xaxis.set_major_formatter(
+        mdates.ConciseDateFormatter(axs[0].xaxis.get_major_locator()))
     axs[0].grid(True)
     for index in range(len(dates_column)):
         axs[0].text(dates_column[index], inr_test_results_column[index], inr_test_results_column[index])
@@ -110,6 +118,9 @@ def solve(data_file):
     axs[1].plot(dates_column, prescribed_medicine_dose_column, color='C1', label='Prescribed', marker='.')
     axs[1].plot(dates_column, results, color='C0', label='Calculated', marker='.')
     axs[1].set_ylabel('Medicine dose [mg]')
+    axs[1].xaxis.set_major_formatter(
+        mdates.ConciseDateFormatter(axs[1].xaxis.get_major_locator()))
+    axs[1].xaxis_date()
     axs[1].grid(True)
     for index in range(len(dates_column)):
         axs[1].text(dates_column[index], results[index], f'{results[index]:.1f}')
