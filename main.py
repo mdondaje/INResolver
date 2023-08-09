@@ -75,7 +75,7 @@ def solve(data_file):
                 elif inr_test_result >= target_inr_max:  # większe niż 3.0
                     # wspolczynnik = odchylenie / zakres
                     factor = (inr_test_result - target_inr_mid) / (very_high_inr - target_inr_max)
-                    results[row] = previous_prescribed_medicine_dose * (1 - 0.5*factor)
+                    results[row] = previous_prescribed_medicine_dose * (1 - 0.8*factor)
                     print(f'{date}: INR {inr_test_result} za wysokie - zmniejsz do {results[row]} mg')
                 elif inr_test_result >= target_inr_min:  # 2.0-3.0
                     results[row] = previous_prescribed_medicine_dose
@@ -86,7 +86,7 @@ def solve(data_file):
                         results[row] = 2 * factor
                         print(f'a {date}: INR {inr_test_result} za niskie - zwiększ do {results[row]} mg')
                     else:
-                        results[row] = previous_prescribed_medicine_dose * (1 + 0.5*factor)
+                        results[row] = previous_prescribed_medicine_dose * (1 + factor)
                         print(f'{date}: INR {inr_test_result} za niskie - zwiększ do {results[row]} mg')
         else:
             print('ERROR!!!')
